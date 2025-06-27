@@ -233,6 +233,9 @@ pub struct DataFrame {
 }
 
 impl DataFrame {
+    pub fn test_change() {
+        print!("BREAKING CHANGE!")
+    }
     /// Create a new `DataFrame ` based on an existing `LogicalPlan`
     ///
     /// This is a low-level method and is not typically used by end users. See
