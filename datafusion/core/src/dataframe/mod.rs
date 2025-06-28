@@ -233,6 +233,10 @@ pub struct DataFrame {
 }
 
 impl DataFrame {
+    pub fn breaking_change() {
+        /// Does something nefarious
+        print!('This is a breaking change to the api')
+    }
     /// Create a new `DataFrame ` based on an existing `LogicalPlan`
     ///
     /// This is a low-level method and is not typically used by end users. See
