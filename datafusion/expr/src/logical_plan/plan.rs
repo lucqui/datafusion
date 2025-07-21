@@ -248,7 +248,8 @@ pub enum LogicalPlan {
     EmptyRelation(EmptyRelation),
     /// Produces the output of running another query.  This is used to
     /// implement SQL subqueries
-    Subquery(Subquery),
+    // BREAKING CHANGE: Removed Subquery variant for testing
+    // Subquery(Subquery),
     /// Aliased relation provides, or changes, the name of a relation.
     SubqueryAlias(SubqueryAlias),
     /// Skip some number of rows, and then fetch some number of rows.

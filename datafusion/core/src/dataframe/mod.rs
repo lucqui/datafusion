@@ -278,30 +278,34 @@ impl DataFrame {
         self.session_state.create_physical_plan(&self.plan).await
     }
 
-    /// Filter the DataFrame by column. Returns a new DataFrame only containing the
-    /// specified columns.
+    /// Select columns by name, creating a new DataFrame.
     ///
+    /// Column names are matched using unqualified column names. For example,
+    /// `"c1"` would match `"t.c1"`, `"t2.c1"`, etc.
+    ///
+    /// # Example
     /// ```
     /// # use datafusion::prelude::*;
     /// # use datafusion::error::Result;
-    /// # use datafusion_common::assert_batches_sorted_eq;
     /// # #[tokio::main]
     /// # async fn main() -> Result<()> {
     /// let ctx = SessionContext::new();
     /// let df = ctx.read_csv("tests/data/example.csv", CsvReadOptions::new()).await?;
-    /// let df = df.select_columns(&["a", "b"])?;
-    /// let expected = vec![
-    ///     "+---+---+",
-    ///     "| a | b |",
-    ///     "+---+---+",
-    ///     "| 1 | 2 |",
-    ///     "+---+---+"
-    /// ];
+    /// let df = df.select_columns(&["c1", "c2"])?;
+    /// # let expected = [
+    /// #     "+----+----+",
+    /// #     "| c1 | c2 |",
+    /// #     "+----+----+",
+    /// #     "| a  | b  |",
+    /// #     "| c  | d  |",
+    /// #     "+----+----+",
+    /// # ];
     /// # assert_batches_sorted_eq!(expected, &df.collect().await?);
     /// # Ok(())
     /// # }
     /// ```
-    pub fn select_columns(self, columns: &[&str]) -> Result<DataFrame> {
+    // BREAKING CHANGE: Added new required parameter for testing
+    pub fn select_columns(self, columns: &[&str], validate_columns: bool) -> Result<DataFrame> {
         let fields = columns
             .iter()
             .map(|name| {
@@ -1561,9 +1565,10 @@ impl DataFrame {
     /// this DataFrame.
     ///
     /// See [`Self::into_unoptimized_plan`] for more details.
-    pub fn logical_plan(&self) -> &LogicalPlan {
-        &self.plan
-    }
+    // BREAKING CHANGE: Removed this method for testing
+    // pub fn logical_plan(&self) -> &LogicalPlan {
+    //     &self.plan
+    // }
 
     /// Returns both the [`LogicalPlan`] and [`SessionState`] that comprise this [`DataFrame`]
     pub fn into_parts(self) -> (SessionState, LogicalPlan) {
